@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import * as React from 'react'
 import './App.css'
 import axios from 'axios'
+import { Header, List } from 'semantic-ui-react'
 
 function App() {
-  const [activities, setActivities] = useState([])
+  const [activities, setActivities] = React.useState([])
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!activities.length) {
       axios.get('http://localhost:5000/api/activities').then((res) => {
         setActivities(res.data)
@@ -14,8 +15,15 @@ function App() {
   }, [activities])
 
   return (
-    <div className='App'>
-      <pre>{JSON.stringify(activities, null, 2)}</pre>
+    <div>
+      <Header as='h2' icon='users' content='Reactivities' />
+      <List>
+        {!!activities.length
+          ? activities.map((a: any) => {
+              return <List.Item key={a.id}>{a.title}</List.Item>
+            })
+          : null}
+      </List>
     </div>
   )
 }

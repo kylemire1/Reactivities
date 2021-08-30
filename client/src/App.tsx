@@ -14,13 +14,16 @@ interface Activity {
 }
 
 function App() {
-  const [activities, setActivities] = React.useState<[] | Array<Activity>>([])
+  const [activities, setActivities] =
+    React.useState<null | Array<Activity>>(null)
 
   React.useEffect(() => {
-    if (!activities.length) {
-      axios.get('http://localhost:5000/api/activities').then((res) => {
-        setActivities(res.data)
-      })
+    if (!activities) {
+      axios
+        .get('http://localhost:5000/api/activities')
+        .then((res) => {
+          setActivities(res.data)
+        })
     }
   }, [activities])
 
@@ -28,7 +31,7 @@ function App() {
     <div>
       <Header as='h2' icon='users' content='Reactivities' />
       <List>
-        {!!activities.length
+        {activities
           ? activities.map((a: Activity) => {
               return <List.Item key={a.id}>{a.title}</List.Item>
             })

@@ -18,21 +18,22 @@ function App() {
     React.useState<null | Array<Activity>>(null)
 
   React.useEffect(() => {
-    if (!activities) {
-      axios
-        .get('http://localhost:5000/api/activities')
-        .then((res) => {
-          setActivities(res.data)
-        })
-    }
-  }, [activities])
+    axios
+      .get('http://localhost:5000/api/activities')
+      .then((res) => {
+        setActivities(res.data)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+  }, [])
 
   return (
     <div>
       <Header as='h2' icon='users' content='Reactivities' />
       <List>
         {activities
-          ? activities.map((a: Activity) => {
+          ? activities.map((a) => {
               return <List.Item key={a.id}>{a.title}</List.Item>
             })
           : null}

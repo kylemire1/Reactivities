@@ -32,11 +32,13 @@ function App() {
     <div>
       <Header as='h2' icon='users' content='Reactivities' />
       <List>
-        {activities
-          ? activities.map((a) => {
-              return <List.Item key={a.id}>{a.title}</List.Item>
-            })
-          : null}
+        {activities ? (
+          activities.map((a) => {
+            return <List.Item key={a.id}>{a.title}</List.Item>
+          })
+        ) : (
+          <p>No activities!</p>
+        )}
       </List>
     </div>
   )

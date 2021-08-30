@@ -3,8 +3,18 @@ import './App.css'
 import axios from 'axios'
 import { Header, List } from 'semantic-ui-react'
 
+interface Activity {
+  id: string
+  title: string
+  date: string
+  description: string
+  category: string
+  city: string
+  venue: string
+}
+
 function App() {
-  const [activities, setActivities] = React.useState([])
+  const [activities, setActivities] = React.useState<[] | Array<Activity>>([])
 
   React.useEffect(() => {
     if (!activities.length) {
@@ -19,7 +29,7 @@ function App() {
       <Header as='h2' icon='users' content='Reactivities' />
       <List>
         {!!activities.length
-          ? activities.map((a: any) => {
+          ? activities.map((a: Activity) => {
               return <List.Item key={a.id}>{a.title}</List.Item>
             })
           : null}

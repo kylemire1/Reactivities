@@ -2,9 +2,10 @@ import { useField } from 'formik'
 import { Form, Label } from 'semantic-ui-react'
 
 interface Props {
-  placeholder: string
+  placeholder?: string
   name: string
   label?: string
+  type?: string
 }
 
 const MyTextInput = (props: Props) => {

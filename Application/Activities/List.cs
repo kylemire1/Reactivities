@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Core;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,37 +14,28 @@ namespace Application.Activities
 {
   public class List
   {
-    public class Query : IRequest<Result<List<Activity>>> { }
+    public class Query : IRequest<Result<List<ActivityDto>>> { }
 
-    public class Handler : IRequestHandler<Query, Result<List<Activity>>>
+    public class Handler : IRequestHandler<Query, Result<List<ActivityDto>>>
     {
       public DataContext _context;
       private readonly ILogger _logger;
-      // Add logger if needed
-      // public Handler(DataContext context, ILogger<List> logger)
-      public Handler(DataContext context, ILogger<List> logger)
+
+      public IMapper _mapper;
+      public Handler(DataContext context, ILogger<List> logger, IMapper mapper)
       {
         _logger = logger;
+        _mapper = mapper;
         _context = context;
       }
 
-      public async Task<Result<List<Activity>>> Handle(Query request, CancellationToken cancellationToken)
+      public async Task<Result<List<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
       {
-        // How to use cancellation token
-        // try
-        // {
-        //   for (var i = 0; i < 10; i++)
-        //   {
-        //     cancellationToken.ThrowIfCancellationRequested();
-        //     await Task.Delay(1000, cancellationToken);
-        //     _logger.LogInformation($"Task {i} has completed");
-        //   }
-        // }
-        // catch (System.Exception ex) when (ex is TaskCanceledException)
-        // {
-        //   _logger.LogInformation("Task was cancelled");
-        // }
-        return Result<List<Activity>>.Success(await _context.Activities.ToListAsync(cancellationToken));
+        var activities = await _context.Activities
+          .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider)
+          .ToListAsync(cancellationToken);
+
+        return Result<List<ActivityDto>>.Success(activities);
       }
     }
   }
